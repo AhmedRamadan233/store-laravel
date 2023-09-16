@@ -12,15 +12,7 @@ use Illuminate\Http\JsonResponse;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-    //  */
-    // public function store(LoginRequest $request): JsonResponse
-    // {
-    //     $request->authenticate();
-    
-    //     return response()->json(['message' => 'Login successful'], Response::HTTP_OK);
-    // }
+
     public function store(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
