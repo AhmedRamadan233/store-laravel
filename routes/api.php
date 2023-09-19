@@ -102,4 +102,11 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/categories',[CategoryController::class, 'getAllCategories'])
         ->middleware('auth:sanctum')
         ->name('getAllCategories');
+    Route::post('/categories',[CategoryController::class, 'createCategory'])
+        ->middleware('auth:sanctum')
+        ->name('createCategory');
+    Route::delete('categories/{id}',[CategoryController::class, 'deleteCategory'])
+        ->middleware('auth:sanctum')
+        ->name('deleteCategory');
+
 });
