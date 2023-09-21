@@ -28,40 +28,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 
-// // User registration route
-// Route::post('/register', [RegisteredUserController::class, 'store'])
-//     ->middleware('guest')
-//     ->name('api.register');
-
-// // User login route
-// Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-//     ->middleware('guest')
-//     ->name('api.login');
-
-// // Forgot password route
-// Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-//     ->middleware('guest')
-//     ->name('api.password.email');
-
-// // Reset password route
-// Route::post('/reset-password', [NewPasswordController::class, 'store'])
-//     ->middleware('guest')
-//     ->name('api.password.store');
-
-// // Verify email route
-// Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-//     ->middleware(['auth', 'signed', 'throttle:6,1'])
-//     ->name('api.verification.verify');
-
-// // Resend email verification notification route
-// Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-//     ->middleware(['auth', 'throttle:6,1'])
-//     ->name('api.verification.send');
-
-// // User logout route
-// Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-//     ->middleware('auth:sanctum')
-//     ->name('api.logout');
 
 
 
@@ -100,13 +66,18 @@ Route::prefix('dashboard')->group(function () {
         ->name('dashboard');
     // get all  Categories
     Route::get('/categories',[CategoryController::class, 'getAllCategories'])
-        ->middleware('auth:sanctum')
+        // ->middleware('auth:sanctum')
         ->name('getAllCategories');
+        
     Route::post('/categories',[CategoryController::class, 'createCategory'])
-        ->middleware('auth:sanctum')
+        // ->middleware('auth:sanctum')
         ->name('createCategory');
+    Route::put('/categories/{id}', [CategoryController::class, 'updateCategory'])
+        // ->middleware('auth:sanctum')
+        ->name('updateCategory');
+
     Route::delete('categories/{id}',[CategoryController::class, 'deleteCategory'])
-        ->middleware('auth:sanctum')
+        // ->middleware('auth:sanctum')
         ->name('deleteCategory');
 
 });
