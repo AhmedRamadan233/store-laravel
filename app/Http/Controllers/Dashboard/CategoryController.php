@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Traits\ImageProcessing;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -18,10 +19,15 @@ class CategoryController extends Controller
     public function getAllCategories(Request $request)
     {
         $filters = $request->query();
-        
-        $categories = Category::filter($filters)->paginate();
-        return response()->json (['All Categories' =>  $categories]);
+    
+        $categories = Category::leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
+            ->select(['categories.*', 'parents.name as parent_name'])
+            ->filter($filters)
+            ->paginate();
+    
+        return response()->json(['data' => $categories]);
     }
+    
 
     /**
      * Show the form for creating a new resource.

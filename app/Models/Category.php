@@ -12,6 +12,13 @@ class Category extends Model
     use HasFactory;
     protected $fillable = ['name', 'slug', 'parent_id', 'description', 'status'];
 
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+
     public function scopeFilter(EloquentBuilder $builder, $filters)
     {
         $name = $filters['name'] ?? null;
