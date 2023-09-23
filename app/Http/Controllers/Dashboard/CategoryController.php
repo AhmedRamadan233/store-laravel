@@ -29,6 +29,54 @@ class CategoryController extends Controller
     }
     
 
+
+    public function getCategoriesTrashing(Request $request)
+    {
+        $filters = $request->query();
+    
+        $categories = Category::onlyTrashed()->leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
+            ->select(['categories.*', 'parents.name as parent_name'])
+            ->filter($filters)
+            ->paginate();
+    
+        return response()->json(['data' => $categories]);
+    }
+
+
+
+
+    
+    
+    public function getCategoriesRestoring(Request $request, $id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        // Check if the category is already restored
+        if (!$category->trashed()) {
+            return response()->json(['error' => 'Category is already restored.'], 400);
+        }
+        // Restore the category
+        $category->restore();
+        return response()->json(['data' => 'Restored category with ID: ' . $id, 'name' => $category->name], 200);
+    }
+    public function deleteCategoriesForced($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+
+        if ($category->trashed() && !$category->deleted_at) {
+            return response()->json(['error' => 'Category is already soft-deleted.'], 400);
+
+        }
+        if ($category->image) {
+            $this->deleteImage($category->image); // Delete the associated image
+        }
+
+        // Force delete the category
+        $category->forceDelete();
+        return response()->json(['data' => 'Force deleted category with ID: '.$id ,'name' => $category->name], 200);
+    }
+
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -63,7 +111,7 @@ class CategoryController extends Controller
      */
     public function updateCategory(Request $request, $id)
     {
-    try{
+
         $category = Category::findOrFail($id);
         $category->name = $request->input('name');
         // Set the slug before other attributes
@@ -86,19 +134,7 @@ class CategoryController extends Controller
             'message' => 'Category updated successfully',
             'category' => $category,
         ], 200);
-        }catch (QueryException $e) {
-        // Handle database query exceptions
-        return response()->json([
-            'message' => 'Database error: ' . $e->getMessage(),
-            'categoryName'=> $category,
-        ], 500);
-    } catch (\Exception $e) {
-        // Handle other exceptions
-        return response()->json([
-            'message' => 'An error occurred: ' . $e->getMessage(),
-            'categoryName'=> $category,
-        ], 500);
-    }
+
     }
 
     /**
@@ -115,9 +151,9 @@ class CategoryController extends Controller
     public function deleteCategory($id)
     {
         $category = Category::findOrFail($id);
-        if ($category->image) {
-            $this->deleteImage($category->image); // Delete the associated image
-        }
+        // if ($category->image) {
+        //     $this->deleteImage($category->image); // Delete the associated image
+        // }
         $category->delete();
         return response()->json(['data' => 'Deleted category with ID: '.$id ,'name' => $category->name], 200);
     }
