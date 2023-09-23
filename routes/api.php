@@ -39,22 +39,18 @@ Route::prefix('dashboard')->group(function () {
     Route::prefix('categories')->group(function () {
         // Get all Categories
         Route::get('/', [CategoryController::class, 'getAllCategories'])->name('getAllCategories');
-
+        // Get Category by id
+        Route::get('/{category}', [CategoryController::class, 'getCategoryById'])->name('getCategoryById')->where('category','\d+');
         // Get trashed Categories
         Route::get('/trashed', [CategoryController::class, 'getCategoriesTrashing'])->name('getCategoriesTrashing');
-
         // Restore trashed Categories
         Route::put('/{id}/restore', [CategoryController::class, 'getCategoriesRestoring'])->name('getCategoriesRestoring');
-
         // Delete trashed categories
         Route::delete('/{id}/forcedelete', [CategoryController::class, 'deleteCategoriesForced'])->name('deleteCategoriesForced');
-
         // Create a Category
         Route::post('/', [CategoryController::class, 'createCategory'])->name('createCategory');
-
         // Update a Category
         Route::put('/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
-
         // Delete a Category
         Route::delete('/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
     });

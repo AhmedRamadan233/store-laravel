@@ -27,8 +27,12 @@ class CategoryController extends Controller
     
         return response()->json(['data' => $categories]);
     }
-    
-
+    // Get Category by id
+    public function getCategoryById(Request $request , $id)
+    {
+        $categories = Category::findOrFail($id);
+        return response()->json(['data' => $categories]);
+    }
 
     public function getCategoriesTrashing(Request $request)
     {
@@ -42,11 +46,6 @@ class CategoryController extends Controller
         return response()->json(['data' => $categories]);
     }
 
-
-
-
-    
-    
     public function getCategoriesRestoring(Request $request, $id)
     {
         $category = Category::onlyTrashed()->findOrFail($id);
@@ -75,11 +74,6 @@ class CategoryController extends Controller
         return response()->json(['data' => 'Force deleted category with ID: '.$id ,'name' => $category->name], 200);
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function createCategory(Request $request)
     {
         $imagePath = $this->saveImage($request->file('image'));
@@ -96,19 +90,7 @@ class CategoryController extends Controller
         $category->image_url = asset('images/' . $category->image);
         return response()->json(['message' => 'Category created successfully', 'category' => $category,'categoryImgUrl' => $category->image_url ], 201);
     }
-    
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function updateCategory(Request $request, $id)
     {
 
@@ -137,17 +119,6 @@ class CategoryController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function deleteCategory($id)
     {
         $category = Category::findOrFail($id);
