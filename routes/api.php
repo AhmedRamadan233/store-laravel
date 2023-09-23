@@ -41,47 +41,36 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/', [CategoryController::class, 'getAllCategories'])->name('getAllCategories');
         // Get Category by id
         Route::get('/{category}', [CategoryController::class, 'getCategoryById'])->name('getCategoryById')->where('category','\d+');
-        // Get trashed Categories
-        Route::get('/trashed', [CategoryController::class, 'getCategoriesTrashing'])->name('getCategoriesTrashing');
-        // Restore trashed Categories
-        Route::put('/{id}/restore', [CategoryController::class, 'getCategoriesRestoring'])->name('getCategoriesRestoring');
-        // Delete trashed categories
-        Route::delete('/{id}/forcedelete', [CategoryController::class, 'deleteCategoriesForced'])->name('deleteCategoriesForced');
         // Create a Category
         Route::post('/', [CategoryController::class, 'createCategory'])->name('createCategory');
         // Update a Category
         Route::put('/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
         // Delete a Category
         Route::delete('/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+        // Get trashed Categories
+        Route::get('/trashed', [CategoryController::class, 'getCategoriesTrashing'])->name('getCategoriesTrashing');
+        // Restore trashed Categories
+        Route::put('/{id}/restore', [CategoryController::class, 'getCategoriesRestoring'])->name('getCategoriesRestoring');
+        // Delete trashed categories
+        Route::delete('/{id}/forcedelete', [CategoryController::class, 'deleteCategoriesForced'])->name('deleteCategoriesForced');
+
     });
 
     // Authentication and registration routes
     Route::prefix('auth')->middleware('guest')->group(function () {
         // User registration route
         Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
-
         // User login route
         Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
-
         // Forgot password route
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');
-
         // Reset password route
         Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('api.password.store');
-
         // Verify email route
-        Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-            ->middleware(['auth', 'signed', 'throttle:6,1'])
-            ->name('api.verification.verify');
-
+        Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])->middleware(['auth', 'signed', 'throttle:6,1'])->name('api.verification.verify');
         // Resend email verification notification route
-        Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-            ->middleware(['auth', 'throttle:6,1'])
-            ->name('api.verification.send');
-
+        Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware(['auth', 'throttle:6,1'])->name('api.verification.send');
         // User logout route
-        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-            ->middleware('auth:sanctum')
-            ->name('api.logout');
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum')->name('api.logout');
     });
 });
