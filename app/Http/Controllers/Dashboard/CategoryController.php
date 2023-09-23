@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Traits\ImageProcessing;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CategoryController extends Controller
 {
@@ -31,7 +32,13 @@ class CategoryController extends Controller
     public function getCategoryById(Request $request , $id)
     {
         $categories = Category::findOrFail($id);
-        return response()->json(['data' => $categories]);
+        $currenturl = url()->current();
+        // $qrCode = QrCode::format('png')->size(200) ->backgroundColor(255,55,0)->generate($currenturl , '../public/qrcodes/qrcode.svg');
+
+       
+        // return view('aa', compact('categories', 'qrCode'));
+
+        return response()->json(['data' => $categories , 'url' => $currenturl]);
     }
 
     public function getCategoriesTrashing(Request $request)

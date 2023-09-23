@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
+Route::get('/dashboard/categories/{id}', [CategoryController::class, 'getCategoryById'])->name('category.show');
 
 require __DIR__.'/auth.php';
