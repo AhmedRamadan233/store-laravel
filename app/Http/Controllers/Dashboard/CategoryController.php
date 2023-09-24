@@ -34,10 +34,7 @@ class CategoryController extends Controller
         $categories = Category::findOrFail($id);
         $currenturl = url()->current();
         // $qrCode = QrCode::format('png')->size(200) ->backgroundColor(255,55,0)->generate($currenturl , '../public/qrcodes/qrcode.svg');
-
-       
         // return view('aa', compact('categories', 'qrCode'));
-
         return response()->json(['data' => $categories , 'url' => $currenturl]);
     }
 

@@ -30,7 +30,7 @@ class ProductFactory extends Factory
             'slug' => Str::slug($name),
             'description' => $this->faker->sentence,
             'image' => $this->faker->imageUrl,
-            'barcode_image' => $this->faker->imageUrl(100,100),
+            // 'product_code' => $this->faker->imageUrl(100,100),
             'price' => $this->faker->randomFloat(1, 1, 499),
             'compare_price' => $this->faker->optional()->randomFloat(1, 500, 9999),
             'options' => json_encode(['option1' => 'value1', 'option2' => 'value2']),

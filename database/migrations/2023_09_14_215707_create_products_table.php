@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->string('barcode_image')->nullable();
+            $table->string('product_code')->nullable();
             $table->float('price')->default(0);
-            $table-> float('compare_price')->nullable();
+            $table->float('compare_price')->nullable();
             $table->json ('options')->nullable();
             $table->float('rating')->default(0);
             $table->boolean('features')->default(0);
