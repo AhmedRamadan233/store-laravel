@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ProductController;
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -26,15 +27,32 @@ use Laravel\Sanctum\Sanctum;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
+ // Authentication and registration routes
+Route::prefix('auth/dashboard')->middleware('guest')->group(function () {
+    // User registration route
+    Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
+    // User login route     
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
+});
+Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
+    // Forgot password route
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');
+    // Reset password route
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('api.password.store');
+    // Verify email route
+    Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])->middleware(['auth', 'signed', 'throttle:6,1'])->name('api.verification.verify');
+    // Resend email verification notification route
+    Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware(['auth', 'throttle:6,1'])->name('api.verification.send');
+    // User logout route
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('api.logout');
+    
+});
 
 // ->middleware('auth:sanctum')
 
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware('auth:sanctum')->group(function () {
     // Dashboard index route
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
     // Categories routes
     Route::prefix('categories')->group(function () {
         // Get all Categories
@@ -55,22 +73,11 @@ Route::prefix('dashboard')->group(function () {
         Route::delete('/{id}/forcedelete', [CategoryController::class, 'deleteCategoriesForced'])->name('deleteCategoriesForced');
 
     });
-
-    // Authentication and registration routes
-    Route::prefix('auth')->middleware('guest')->group(function () {
-        // User registration route
-        Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
-        // User login route
-        Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
-        // Forgot password route
-        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');
-        // Reset password route
-        Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('api.password.store');
-        // Verify email route
-        Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])->middleware(['auth', 'signed', 'throttle:6,1'])->name('api.verification.verify');
-        // Resend email verification notification route
-        Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware(['auth', 'throttle:6,1'])->name('api.verification.send');
-        // User logout route
-        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum')->name('api.logout');
+    // products routes
+    Route::prefix('products')->group(function () {
+        // Get all Categories
+        Route::get('/', [ProductController::class, 'getAllProducts'])->name('getAllProducts');
     });
+
+
 });

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Dashboard\CategoryController;
+use App\Http\Controllers\Dashboard\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +17,6 @@ use App\Http\Controllers\Dashboard\CategoryController;
 Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
-Route::get('/dashboard/categories/{id}', [CategoryController::class, 'getCategoryById'])->name('category.show');
+// Route::get('/dashboard/products', [ProductController::class, 'getAllProducts'])->name('getAllProducts');
 
 require __DIR__.'/auth.php';

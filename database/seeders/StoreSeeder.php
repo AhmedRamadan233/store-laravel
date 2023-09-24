@@ -25,7 +25,7 @@ class StoreSeeder extends Seeder
         //     'created_at' => now(),
         //     'updated_at' => now(),
         // ]);
-        Store::factory(100)->create();
+        Store::factory(10)->create();
 
     }
 }
