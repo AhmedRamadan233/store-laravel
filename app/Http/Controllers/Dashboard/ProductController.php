@@ -45,6 +45,7 @@ class ProductController extends Controller
 
     public function createProduct(Request $request)
     {
+        $number = mt_rand(1000000000 , 9999999999);
         $imagePath = $this->saveImage($request->file('image'));
         $product = new Product();
         $product->name = $request->input('name');
@@ -54,7 +55,12 @@ class ProductController extends Controller
         $product->store_id = $request->input('store_id');
         $product->category_id = $request->input('category_id');
         $product->description = $request->input('description');
-        $product->product_code = $request->input('product_code');
+        if($this->productCodeExists($number)){
+            $number = mt_rand(1000000000 , 9999999999);
+
+        }
+        $product ['product_code'] =  $number;
+
         $product->price = $request->input('price');
         $product->compare_price = $request->input('compare_price');
         // $product->options = $request->input('options');
@@ -68,7 +74,9 @@ class ProductController extends Controller
     }
 
 
-
+public function productCodeExists($number){
+    return Product::whereProductCode($number)->exists();
+}
 
 
 
