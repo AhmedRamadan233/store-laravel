@@ -19,7 +19,7 @@ return new class extends Migration
                 ->nullOnDelete(); // null on delete  is not  allowed for categories  columns  
                 //->cascadeOnDelete() //  cascade delete  all children        
                // ->restrictOnDelete();//delete categories from parent table
-            $table->string('name');
+            $table->string('name')->nullable(); // or ->default(null)
             $table->string('slug')->unique();
             $table->string('description')->nullable();
             $table->string('image')->nullable();

@@ -51,7 +51,7 @@ Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
 
 // ->middleware('auth:sanctum')
 
-Route::prefix('dashboard')->middleware('auth:sanctum')->group(function () {
+Route::prefix('dashboard')->group(function () {
     // Dashboard index route
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     // Categories routes
@@ -78,6 +78,11 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function () {
     Route::prefix('products')->group(function () {
         // Get all Categories
         Route::get('/', [ProductController::class, 'getAllProducts'])->name('getAllProducts');
+        Route::put('/{id}', [ProductController::class, 'updateProduct'])->name('getAllProducts');
+        Route::get('/{product}', [ProductController::class, 'getProductById'])->name('getProductById')->where('product','\d+');
+        Route::post('/', [ProductController::class, 'createProduct'])->name('createProduct');
+
+        
     });
         // profiles routes
         Route::prefix('profiles')->group(function () {

@@ -106,34 +106,44 @@ class CategoryController extends Controller
         $category->image_url = asset('images/' . $category->image);
         return response()->json(['message' => 'Category created successfully', 'category' => $category,'categoryImgUrl' => $category->image_url ], 201);
     }
-
     public function updateCategory(Request $request, $id)
     {
-
         $category = Category::findOrFail($id);
-        $category->name = $request->input('name');
-        // Set the slug before other attributes
-        $category->slug = Str::slug($request->input('name'));
-        $category->parent_id = $request->input('parent_id');
-        $category->description = $request->input('description');
-        $category->status = $request->input('status');
+    
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        $updatedData = [
+            'name' => $request->input('name'),
+            'slug' => Str::slug($request->input('name')),
+            'parent_id' => $request->input('parent_id'),
+            'description' => $request->input('description'),
+            'status' => $request->input('status'),
+        ];
     
         if ($request->hasFile('image')) {
             if ($category->image) {
                 $this->deleteImage($category->image); // Delete old image
             }
-
+    
             $imagePath = $this->saveImage($request->file('image')); // Save new image
-            $category->image = $imagePath;
+            $updatedData['image'] = $imagePath;
         }
-        $category->save();
-        $category->image_url = asset('images/' . $category->image);
+    
+        $category->update($updatedData);
+    
         return response()->json([
             'message' => 'Category updated successfully',
             'category' => $category,
         ], 200);
-
     }
+    
+    
+    
+    
 
     public function deleteCategory($id)
     {
