@@ -21,9 +21,18 @@ class CategoryController extends Controller
     {
         $filters = $request->query();
     
-        $categories = Category::leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
-            ->select(['categories.*', 'parents.name as parent_name'])
+        $categories = Category::with('parent')
+            // leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
+            // ->select(['categories.*', 'parents.name as parent_name'])
+            // ->orderBy('name')
+            // ->selectRaw('(SELECT COUNT(*) FROM products WHERE category_id = categories.id) as product_count')
+            ->withCount([
+                'products as product_count' => function ($query) {
+                    $query->where('status', '=', 'active');
+                }
+            ])
             ->filter($filters)
+            // ->dd();
             ->paginate();
     
         return response()->json(['data' => $categories]);
@@ -31,11 +40,14 @@ class CategoryController extends Controller
     // Get Category by id
     public function getCategoryById(Request $request , $id)
     {
-        $categories = Category::findOrFail($id);
-        $currenturl = url()->current();
-        // $qrCode = QrCode::format('png')->size(200) ->backgroundColor(255,55,0)->generate($currenturl , '../public/qrcodes/qrcode.svg');
-        // return view('aa', compact('categories', 'qrCode'));
-        return response()->json(['data' => $categories , 'url' => $currenturl]);
+        $categories = Category::with('parent')
+            ->withCount([
+                'products as product_count' => function ($query) {
+                    $query->where('status', '=', 'active');
+                }
+            ])->findOrFail($id);
+
+        return response()->json(['data' => $categories ]);
     }
 
     public function getCategoriesTrashing(Request $request)

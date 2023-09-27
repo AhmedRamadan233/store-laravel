@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\Dashboard\ProfileController;
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -78,6 +79,12 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function () {
         // Get all Categories
         Route::get('/', [ProductController::class, 'getAllProducts'])->name('getAllProducts');
     });
+        // profiles routes
+        Route::prefix('profiles')->group(function () {
+            // Get all Categories
+            Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+            Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        });
 
 
 });
