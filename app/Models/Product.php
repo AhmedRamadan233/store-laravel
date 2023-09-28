@@ -20,7 +20,6 @@ class Product extends Model
         'slug',
         'description',
         'image',
-        'product_code',
         'price',
         'compare_price',
         'options',
@@ -67,6 +66,10 @@ class Product extends Model
             'id',           // PK current model
             'id'            // PK related model
         );
+    }
+    public function productCode()
+    {
+        return $this->belongsTo(ProductCode::class, 'product_code_id', 'id');
     }
     public function scopeFilter(EloquentBuilder $builder, $filters)
     {

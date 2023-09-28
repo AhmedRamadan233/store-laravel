@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Controllers\ProductCodeController;
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -76,7 +77,7 @@ Route::prefix('dashboard')->group(function () {
     });
     // products routes
     Route::prefix('products')->group(function () {
-        // Get all Categories
+        // Get all Product
         Route::get('/', [ProductController::class, 'getAllProducts'])->name('getAllProducts');
         Route::put('/{id}', [ProductController::class, 'updateProduct'])->name('getAllProducts');
         Route::get('/{product}', [ProductController::class, 'getProductById'])->name('getProductById')->where('product','\d+');
@@ -84,12 +85,18 @@ Route::prefix('dashboard')->group(function () {
 
         
     });
-        // profiles routes
-        Route::prefix('profiles')->group(function () {
-            // Get all Categories
-            Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-            Route::patch('/', [ProfileController::class, 'update'])->name('update');
-        });
+    // profiles routes
+    Route::prefix('profiles')->group(function () {
+        // Get My profile
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+    });
+    // profiles routes
+    Route::prefix('productcodes')->group(function () {
+        // Get My profile
+        Route::get('/', [ProductCodeController::class, 'getAllProductCodes'])->name('getAllProductCodes');
+        // Route::patch('/', [ProductCodeController::class, 'update'])->name('update');
+    });
 
 
 });

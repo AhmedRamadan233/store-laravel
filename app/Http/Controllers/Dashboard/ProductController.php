@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductCode;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class ProductController extends Controller
     public function getAllProducts(Request $request)
     {
         $filters = $request->query();
-        $products = Product::with(['category', 'store' , 'tags'])->filter($filters)->paginate();
+        $products = Product::with(['category', 'store' , 'tags' , 'productCode'])->filter($filters)->paginate();
 
         return response()->json(['data' => $products]);
     }
@@ -37,7 +38,7 @@ class ProductController extends Controller
 
     public function getProductById(Request $request , $id)
     {
-        $products = Product::with(['tags'])->findOrFail($id);
+        $products = Product::with(['category', 'store' , 'tags' , 'productCode'])->findOrFail($id);
 
         return response()->json(['data' => $products ]);
     }
@@ -45,45 +46,56 @@ class ProductController extends Controller
 
     public function createProduct(Request $request)
     {
-        $number = mt_rand(1000000000 , 9999999999);
         $imagePath = $this->saveImage($request->file('image'));
-        $product = new Product();
-        $product->name = $request->input('name');
-        // Set the slug before other attributes
-        $product->slug = Str::slug($request->input('name'));
-
-        $product->store_id = $request->input('store_id');
-        $product->category_id = $request->input('category_id');
-        $product->description = $request->input('description');
-        if($this->productCodeExists($number)){
-            $number = mt_rand(1000000000 , 9999999999);
-
+    
+        // Generate a unique product code
+        $number = mt_rand(1000000000, 9999999999);
+        while ($this->productCodeExists($number)) {
+            $number = mt_rand(1000000000, 9999999999);
         }
-        $product ['product_code'] =  $number;
-
-        $product->price = $request->input('price');
-        $product->compare_price = $request->input('compare_price');
-        // $product->options = $request->input('options');
-        $product->rating = $request->input('rating');
-        $product->features = $request->input('features');
-        $product->status = $request->input('status');
-        $product->image = $imagePath;
+        $currentDateTime = now()->format('d-m-Y-H:i');
+    
+        // Create a new product
+        $product = new Product([
+            'name' => $request->input('name'),
+            'slug' => Str::slug($request->input('name')),
+            'store_id' => $request->input('store_id'),
+            'category_id' => $request->input('category_id'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'compare_price' => $request->input('compare_price'),
+            'rating' => $request->input('rating'),
+            'features' => $request->input('features'),
+            'status' => $request->input('status'),
+            'image' => $imagePath,
+            'product_code' => $number,
+        ]);
+    
+    
+        // Create and store a product code in the "product_codes" table
+        $productCode = ProductCode::create([
+            'name' => Str::slug($request->input('name'))."-".$currentDateTime,
+            'product_code' => $number,
+        ]);
+    
+        $product->productCode()->associate($productCode);
         $product->save();
+
         $product->image_url = asset('images/' . $product->image);
-        return response()->json(['message' => 'product created successfully', 'product' => $product,'productImgUrl' => $product->image_url ], 201);
+    
+        return response()->json([
+            'message' => 'Product created successfully',
+            'product' => $product,
+            'productImgUrl' => $product->image_url,
+            'productCode' => $productCode,
+        ], 201);
     }
+    
 
 
-public function productCodeExists($number){
-    return Product::whereProductCode($number)->exists();
-}
-
-
-
-
-
-
-
+    public function productCodeExists($number){
+        return Product::whereProductCode($number)->exists();
+    }
     public function updateProduct(Request $request, $id)
     {
         $product = Product::findOrFail($id);
