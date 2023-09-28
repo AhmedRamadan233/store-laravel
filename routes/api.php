@@ -12,7 +12,12 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
-use App\Http\Controllers\ProductCodeController;
+use App\Http\Controllers\Dashboard\ProductCodeController;
+use App\Http\Controllers\Website\HomeController;
+use App\Http\Controllers\Website\ProductController as WebsiteProductController;
+
+
+
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -81,9 +86,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/', [ProductController::class, 'getAllProducts'])->name('getAllProducts');
         Route::put('/{id}', [ProductController::class, 'updateProduct'])->name('getAllProducts');
         Route::get('/{product}', [ProductController::class, 'getProductById'])->name('getProductById')->where('product','\d+');
-        Route::post('/', [ProductController::class, 'createProduct'])->name('createProduct');
-
-        
+        Route::post('/', [ProductController::class, 'createProduct'])->name('createProduct');      
     });
     // profiles routes
     Route::prefix('profiles')->group(function () {
@@ -98,5 +101,18 @@ Route::prefix('dashboard')->group(function () {
         // Route::patch('/', [ProductCodeController::class, 'update'])->name('update');
     });
 
+
+});
+
+Route::prefix('website')->group(function(){
+    // website routes
+    Route::get('/', [HomeController::class, 'index'])->name('website');
+
+    // products routes
+    Route::prefix('products')->group(function () {
+        // Get all Product
+        Route::get('/', [WebsiteProductController::class, 'getAllProducts'])->name('getAllProducts');
+        Route::get('/{product:slug}', [WebsiteProductController::class, 'getProductBySlug'])->name('getProductBySlug');
+    });
 
 });

@@ -75,14 +75,13 @@ class Product extends Model
     {
         $name = $filters['name'] ?? null;
 
-        $status = $filters['status'] ?? null;
-
         if ($name) {
             $builder->where('name', 'LIKE', "%$name%");
         }
-        if ($status) {
-            $builder->where('status', '=', $status);
-        }
+    }
 
+    public function scopeActive(EloquentBuilder $builder)
+    {
+        $builder->where('status', '=', 'active');
     }
 }
