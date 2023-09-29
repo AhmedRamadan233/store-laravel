@@ -74,6 +74,8 @@ return [
 
     'timezone' => 'UTC',
 
+    'currency' => 'USD',
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

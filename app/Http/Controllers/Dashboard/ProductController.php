@@ -84,14 +84,14 @@ class ProductController extends Controller
         $product->image_url = asset('images/' . $product->image);
     
         return response()->json([
-            'message' => 'Product created successfully',
-            'product' => $product,
-            'productImgUrl' => $product->image_url,
-            'productCode' => $productCode,
+            'data' => [
+                'message' => 'Product created successfully',
+                'product' => $product,
+                'productImgUrl' => $product->image_url,
+                'productCode' => $productCode,
+            ],
         ], 201);
     }
-    
-
 
     public function productCodeExists($number){
         return Product::whereProductCode($number)->exists();
@@ -152,9 +152,11 @@ class ProductController extends Controller
 
 
         return response()->json([
-            'message' => 'Product updated successfully',
-            'product' => $product,
-            'product-tag' => $product->tags,
+            'data' => [
+                'message' => 'Product updated successfully',
+                'product' => $product,
+                'product-tag' => $product->tags,
+            ],
         ], 200);
     }
 

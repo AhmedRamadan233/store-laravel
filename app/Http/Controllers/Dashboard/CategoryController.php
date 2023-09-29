@@ -7,9 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Traits\ImageProcessing;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class CategoryController extends Controller
 {
@@ -32,7 +30,6 @@ class CategoryController extends Controller
                 }
             ])
             ->filter($filters)
-            // ->dd();
             ->paginate();
     
         return response()->json(['data' => $categories]);
@@ -79,12 +76,10 @@ class CategoryController extends Controller
 
         if ($category->trashed() && !$category->deleted_at) {
             return response()->json(['error' => 'Category is already soft-deleted.'], 400);
-
         }
         if ($category->image) {
             $this->deleteImage($category->image); // Delete the associated image
         }
-
         // Force delete the category
         $category->forceDelete();
         return response()->json(['data' => 'Force deleted category with ID: '.$id ,'name' => $category->name], 200);
@@ -93,7 +88,6 @@ class CategoryController extends Controller
     public function createCategory(Request $request)
     {
         $imagePath = $this->saveImage($request->file('image'));
-
         $category = new Category();
         $category->name = $request->input('name');
         // Set the slug before other attributes
@@ -104,7 +98,13 @@ class CategoryController extends Controller
         $category->image = $imagePath;
         $category->save();
         $category->image_url = asset('images/' . $category->image);
-        return response()->json(['message' => 'Category created successfully', 'category' => $category,'categoryImgUrl' => $category->image_url ], 201);
+        return response()->json([
+            'data' =>[
+                'message' => 'Category created successfully', 
+                'category' => $category,
+                'categoryImgUrl' => $category->image_url 
+            ]
+        ], 201);
     }
     public function updateCategory(Request $request, $id)
     {
