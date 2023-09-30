@@ -14,4 +14,23 @@ class Authenticate extends Middleware
     {
         return $request->expectsJson() ? null : route('login');
     }
+    // protected function redirectTo(Request $request): ?string
+    // {
+    //     if ($request->expectsJson()) {
+    //         // For JSON requests, return null to indicate no redirection
+    //         return null;
+    //     }
+    
+    //     // Check the prefix of the request URL
+    //     if ($request->is('auth/dashboard/*')) {
+    //         // If the URL matches the 'auth/dashboard' prefix, redirect to the 'dashboard.login' route
+    //         return route('dashboard.login');
+    //     } elseif ($request->is('auth/website/*')) {
+    //         // If the URL matches the 'auth/website' prefix, redirect to the 'website.login' route
+    //         return route('website.login');
+    //     }
+    
+    //     // For other cases, you can return a default route or null if you want no redirection
+    //     return route('login'); // Default login route
+    // }
 }

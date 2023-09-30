@@ -15,9 +15,6 @@ use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\ProductCodeController;
 use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\Website\ProductController as WebsiteProductController;
-
-
-
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -35,12 +32,20 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
  // Authentication and registration routes
-Route::prefix('auth/dashboard')->middleware('guest')->group(function () {
+Route::prefix('auth/dashboard')
+    ->middleware('guest')->group(function () {
     // User registration route
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
     // User login route     
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
 });
+// Route::prefix('auth/website')
+//     ->middleware('guest')->group(function () {
+//     // User registration route
+//     Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
+//     // User login route     
+//     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
+// });
 Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
     // Forgot password route
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');
@@ -57,7 +62,7 @@ Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
 
 // ->middleware('auth:sanctum')
 
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->group(function () {
     // Dashboard index route
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     // Categories routes
