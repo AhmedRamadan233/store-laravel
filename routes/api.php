@@ -15,6 +15,8 @@ use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\ProductCodeController;
 use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\Website\ProductController as WebsiteProductController;
+use App\Http\Controllers\Website\CartController;
+
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -118,6 +120,12 @@ Route::prefix('website')->group(function(){
         // Get all Product
         Route::get('/', [WebsiteProductController::class, 'getAllProducts'])->name('getAllProducts');
         Route::get('/{product:slug}', [WebsiteProductController::class, 'getProductBySlug'])->name('getProductBySlug');
+    });
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('cart.index');
+        Route::post('/store', [CartController::class, 'store'])->name('cart.store');
+        Route::put('/update', [CartController::class, 'update'])->name('cart.update');
+        Route::delete('/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
     });
 
 });

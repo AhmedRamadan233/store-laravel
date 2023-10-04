@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Cart;
 
+
 use App\Models\Cart;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -9,6 +10,7 @@ use Illuminate\Support\Collection ;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
+use App\Repositories\Cart\CartRepository;
 
 class CartModelRepository implements CartRepository
 {
@@ -23,7 +25,7 @@ class CartModelRepository implements CartRepository
         return Cart::create([
             'cookie_id' =>$this->getCookieId(),
             'user_id' => Auth::id(),
-            'product_id' => $product->id(),
+            'product_id' => $product->id, // Corrected
             'quantity' => $quantity,
         ]);
     }
@@ -37,9 +39,9 @@ class CartModelRepository implements CartRepository
             ]);
     }
 
-    public function delete(Product $product)
+    public function delete($id)
     {
-        Cart::where('product_id', '=',$product->id)
+        Cart::where('id', '=',$id)
             ->where('cookie_id' ,'=', $this->getCookieId()) 
             ->delete();
     }
@@ -51,7 +53,7 @@ class CartModelRepository implements CartRepository
 
     public function total() : float
     {
-        return Cart::where('cookie_id' , '=' ,  $this->getCookieId())
+        return (float) Cart::where('cookie_id' , '=' ,  $this->getCookieId())
             ->join('products' , 'product.id', '=' , 'carts.product_id')
             ->selectRow('SUM(products.price * carts.quantity) as total')
             ->value('total');
@@ -60,7 +62,7 @@ class CartModelRepository implements CartRepository
         $cookie_id = Cookie::get('cart_id');
         if(!$cookie_id){
             $cookie_id = Str::uuid();
-            Cookie::queue('cart_id', $cookie_id , Carbon::now()->addDays(30));
+            Cookie::queue('cart_id', $cookie_id , 30*24*60);
         }
 
         return $cookie_id;

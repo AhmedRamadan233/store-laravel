@@ -173,7 +173,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
+        // SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        App\Providers\CartServicesProvider::class,
+
 
     ])->toArray(),
 

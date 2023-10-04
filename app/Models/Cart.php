@@ -6,6 +6,7 @@ use App\Observers\CartObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Models\Product;
 
 class Cart extends Model
 {
