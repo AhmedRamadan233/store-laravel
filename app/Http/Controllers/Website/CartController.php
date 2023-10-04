@@ -53,7 +53,7 @@ public function update(Request $request, CartRepository $cart)
     // Update the cart with the product and quantity
     $cart->update($product, $quantity);
 
-    return response()->json(['message' => 'Product added to cart successfully']);
+    return response()->json(['message' => 'Product updaded to cart successfully']);
 }
 
     public function destroy(CartRepository $cart , $id)

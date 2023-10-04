@@ -125,7 +125,7 @@ Route::prefix('website')->group(function(){
         Route::get('/', [CartController::class, 'index'])->name('cart.index');
         Route::post('/store', [CartController::class, 'store'])->name('cart.store');
         Route::put('/update', [CartController::class, 'update'])->name('cart.update');
-        Route::delete('/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
+        Route::delete('/destroy/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
     });
 
 });
