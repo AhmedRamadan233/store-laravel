@@ -15,9 +15,10 @@ class CartController extends Controller
         // dd( $cart);
 
         $items =  $cart->get();
-       
+        $total = $cart->total();
         // return view('product');
-        return response()->json(['data' => $items]);
+
+        return response()->json(['data' => $items , 'total' => $total]);
     }
 
     public function store(Request $request, CartRepository $cart)
@@ -35,30 +36,36 @@ class CartController extends Controller
     }
     
 
-public function update(Request $request, CartRepository $cart)
-{
-    $this->validate($request, [
-        'product_id' => 'required|exists:products,id',
-        'quantity' => 'required|integer|min:1',
-    ]);
+    public function update(Request $request, CartRepository $cart)
+    {
+        $this->validate($request, [
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-    $productId = $request->input('product_id');
-    $quantity = $request->input('quantity');
+        $productId = $request->input('product_id');
+        $quantity = $request->input('quantity');
 
-    // Get the product by its ID
-    $product = Product::findOrFail($productId);
+        // Get the product by its ID
+        $product = Product::findOrFail($productId);
 
-    // Now, you can use $product->id to access the ID if needed
+        // Now, you can use $product->id to access the ID if needed
 
-    // Update the cart with the product and quantity
-    $cart->update($product, $quantity);
+        // Update the cart with the product and quantity
+        $cart->update($product, $quantity);
 
-    return response()->json(['message' => 'Product updaded to cart successfully']);
-}
+        return response()->json(['message' => 'Product updaded to cart successfully']);
+    }
 
     public function destroy(CartRepository $cart , $id)
     {
         $cart->delete($id);
         return response()->json(['message' => 'Product removed from cart successfully']);
+    }
+
+    public function total(CartRepository $cart)
+    {
+        $total = $cart->total();
+        return response()->json(['total' => $total]);
     }
 }

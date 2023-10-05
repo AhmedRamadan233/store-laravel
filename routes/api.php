@@ -62,9 +62,9 @@ Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
     
 });
 
-// ->middleware('auth:sanctum')
+// ->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->
 
-Route::prefix('dashboard')->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->group(function () {
+Route::prefix('dashboard')->group(function () {
     // Dashboard index route
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     // Categories routes
@@ -126,6 +126,8 @@ Route::prefix('website')->group(function(){
         Route::post('/store', [CartController::class, 'store'])->name('cart.store');
         Route::put('/update', [CartController::class, 'update'])->name('cart.update');
         Route::delete('/destroy/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+        Route::get('/total', [CartController::class, 'total'])->name('cart.total');
+
     });
 
 });

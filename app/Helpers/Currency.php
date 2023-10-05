@@ -12,8 +12,6 @@ class Currency
         if($currency === null){
             $currency = config('app.currency');
             return $formatter->formatCurrency($amount , $currency);
-      
-
         }
     }
 
