@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class OrderItem extends Model
+class OrderItem extends Pivot
 {
     use HasFactory;
 
@@ -14,4 +15,17 @@ class OrderItem extends Model
     public $incrementing = true;
 
     public $timestamps = false;
+
+
+    public function product()
+    {
+        $this->belongsTo(Product::class)->withDefault([
+            'name' => $this->product_name
+        ]);
+    }
+
+    public function order()
+    {
+        $this->belongsTo(Order::class);
+    }
 }
