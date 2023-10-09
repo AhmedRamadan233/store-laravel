@@ -12,11 +12,13 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
-use App\Http\Controllers\Dashboard\ProductCodeController;
 use App\Http\Controllers\Website\HomeController;
-use App\Http\Controllers\Website\ProductController as WebsiteProductController;
-use App\Http\Controllers\Website\CartController;
 
+use App\Http\Controllers\Dashboard\ProductCodeController;
+use App\Http\Controllers\Website\ProductController as WebsiteProductController;
+
+use App\Http\Controllers\Website\CartController;
+use App\Http\Controllers\website\CheckoutController;
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -129,5 +131,8 @@ Route::prefix('website')->group(function(){
         Route::get('/total', [CartController::class, 'total'])->name('cart.total');
 
     });
+    Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
 
 });
