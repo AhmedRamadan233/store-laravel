@@ -36,13 +36,14 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
  // Authentication and registration routes
-Route::prefix('auth/dashboard')
-    ->middleware('guest')->group(function () {
+ Route::prefix('auth/dashboard')->group(function () {
     // User registration route
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
-    // User login route     
+    
+    // User login route
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
 });
+
 // Route::prefix('auth/website')
 //     ->middleware('guest')->group(function () {
 //     // User registration route
