@@ -41,11 +41,7 @@ class CartModelRepository implements CartRepository
             $this->get()->push($cart);
             return $cart;
         }
-    
-        // Ensure that 'quantity' is a numeric field in your database
-        $item->increment('quantity', $quantity);
-    
-        return $item;
+        return  $item->increment('quantity', $quantity);;
     }
     
 

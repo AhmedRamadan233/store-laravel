@@ -25,6 +25,11 @@ return new class extends Migration
                 ->default('pendding');
             $table->enum('payment_status' , ['pendding' , 'paid' , 'faild' ])
                 ->default('pendding');
+            $table->float('shipping')->default(0);
+            $table->float('tax')->default(0);
+            $table->float('discount')->default(0);
+            $table->float('total ')->default(0);
+
             $table->timestamps();
         });
     }

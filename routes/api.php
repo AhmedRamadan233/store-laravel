@@ -66,7 +66,7 @@ Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
 
 // ->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->
 
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->group(function () {
     // Dashboard index route
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     // Categories routes
@@ -113,7 +113,7 @@ Route::prefix('dashboard')->group(function () {
 
 });
 
-Route::prefix('website')->group(function(){
+Route::prefix('website')->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->group(function(){
     // website routes
     Route::get('/', [HomeController::class, 'index'])->name('website');
 
