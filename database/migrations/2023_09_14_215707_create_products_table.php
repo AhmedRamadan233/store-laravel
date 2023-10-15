@@ -28,6 +28,7 @@ return new class extends Migration
             $table->boolean('features')->default(0);
             $table->enum('status', ['active', 'draft', 'archived'])->default('active');
             $table->string('product_code')->nullable()->unique(); // Add this line
+            $table->unsignedSmallInteger('quantity')->default(0);
             $table->timestamps();
             $table->softDeletes();
             

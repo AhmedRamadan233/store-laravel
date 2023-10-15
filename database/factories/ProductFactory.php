@@ -36,6 +36,7 @@ class ProductFactory extends Factory
             'options' => json_encode(['option1' => 'value1', 'option2' => 'value2']),
             'rating' => $this->faker->randomFloat(2, 0, 5),
             'features' => $this->faker->boolean,
+            'quantity' => 10, // Set quantity to 10
             // 'status' => $this->faker->randomElement(['active', 'draft', 'archived']),
         ];
     }
