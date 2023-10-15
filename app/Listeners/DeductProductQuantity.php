@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\OrderCreated;
 use App\Facades\Cart;
 use App\Models\Product;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,8 +22,9 @@ class DeductProductQuantity
     /**
      * Handle the event.
      */
-    public function handle($order, $user = null): void
+    public function handle(OrderCreated $event): void
     {
+        $order = $event->order;
         // Update products' quantity
         foreach ($order->products as $product) {
             $quantityToDecrement = $product->order_items->quantity; 
