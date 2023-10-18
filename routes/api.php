@@ -12,9 +12,9 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Controllers\Dashboard\ProductCodeController;
 use App\Http\Controllers\Website\HomeController;
 
-use App\Http\Controllers\Dashboard\ProductCodeController as DashboardProductCodeController;
 use App\Http\Controllers\Website\ProductController as WebsiteProductController;
 
 use App\Http\Controllers\Website\CartController;
@@ -100,7 +100,7 @@ Route::prefix('dashboard')->middleware(['auth:sanctum', 'auth.type:admin,super-a
     // profiles routes
     Route::prefix('productcodes')->group(function () {
         // Get My profile
-        Route::get('/', [DashboardProductCodeController::class, 'getAllProductCodes'])->name('getAllProductCodes');
+        Route::get('/', [ProductCodeController::class, 'getAllProductCodes'])->name('getAllProductCodes');
         // Route::patch('/', [ProductCodeController::class, 'update'])->name('update');
     });
 
