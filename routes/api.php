@@ -14,7 +14,7 @@ use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Website\HomeController;
 
-use App\Http\Controllers\Dashboard\ProductCodeController;
+use App\Http\Controllers\Dashboard\ProductCodeController as DashboardProductCodeController;
 use App\Http\Controllers\Website\ProductController as WebsiteProductController;
 
 use App\Http\Controllers\Website\CartController;
@@ -36,21 +36,14 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
  // Authentication and registration routes
- Route::prefix('auth/dashboard')->group(function () {
+ Route::prefix('auth/dashboard')->middleware('guest')->group(function () {
     // User registration route
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
-    
-    // User login route
+    // User login route     
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
 });
 
-// Route::prefix('auth/website')
-//     ->middleware('guest')->group(function () {
-//     // User registration route
-//     Route::post('/register', [RegisteredUserController::class, 'store'])->name('api.register');
-//     // User login route     
-//     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
-// });
+
 Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
     // Forgot password route
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('api.password.email');
@@ -107,14 +100,14 @@ Route::prefix('dashboard')->middleware(['auth:sanctum', 'auth.type:admin,super-a
     // profiles routes
     Route::prefix('productcodes')->group(function () {
         // Get My profile
-        Route::get('/', [ProductCodeController::class, 'getAllProductCodes'])->name('getAllProductCodes');
+        Route::get('/', [DashboardProductCodeController::class, 'getAllProductCodes'])->name('getAllProductCodes');
         // Route::patch('/', [ProductCodeController::class, 'update'])->name('update');
     });
 
 
 });
 
-Route::prefix('website')->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->group(function(){
+Route::prefix('website')->middleware(['auth:sanctum'])->group(function(){
     // website routes
     Route::get('/', [HomeController::class, 'index'])->name('website');
 
