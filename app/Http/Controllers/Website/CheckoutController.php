@@ -6,11 +6,13 @@ use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Notifications\OrderCreatedNotification;
 use App\Repositories\Cart\CartRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class CheckoutController extends Controller
 {
@@ -28,6 +30,14 @@ class CheckoutController extends Controller
     
     public function store(Request $request, CartRepository $cart)
     {
+        // $request->validate([
+        //     'addr.billing.first_name' => ['required', 'string', 'max:255'],
+        //     'addr.billing.last_name' => ['required', 'string', 'max:255'],
+        //     'addr.billing.email' => ['required', 'email', 'max:255'],
+        //     'addr.billing.phone_number' => ['required', 'string', 'max:255'],
+        //     'addr.billing.city' => ['required', 'string', 'max:255'],
+        // ]);
+
         $items = $cart->get();
         $items = $items->groupBy('product.store_id');
         $items = $items->all();
@@ -58,10 +68,11 @@ class CheckoutController extends Controller
             DB::commit();
             // event('order.created' , $order , Auth::user());
             event(new OrderCreated($order));
+
         } 
     } catch (\Throwable $e) {
         DB::rollBack();
-        throw $e;
+        // throw $e;
     }
 
     return response()->json(['message' => 'Order created successfully' ]);
