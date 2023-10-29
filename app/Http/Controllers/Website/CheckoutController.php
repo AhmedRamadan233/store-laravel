@@ -6,13 +6,11 @@ use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Notifications\OrderCreatedNotification;
 use App\Repositories\Cart\CartRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
+
 
 class CheckoutController extends Controller
 {
@@ -27,7 +25,6 @@ class CheckoutController extends Controller
         return response()->json(['data' => $items]);
     }
 
-    
     public function store(Request $request, CartRepository $cart)
     {
         // $request->validate([
