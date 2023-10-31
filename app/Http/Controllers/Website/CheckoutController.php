@@ -27,6 +27,7 @@ class CheckoutController extends Controller
 
     public function store(Request $request, CartRepository $cart)
     {
+
         // $request->validate([
         //     'addr.billing.first_name' => ['required', 'string', 'max:255'],
         //     'addr.billing.last_name' => ['required', 'string', 'max:255'],
@@ -69,7 +70,7 @@ class CheckoutController extends Controller
         } 
     } catch (\Throwable $e) {
         DB::rollBack();
-        // throw $e;
+        throw $e;
     }
 
     return response()->json(['message' => 'Order created successfully' ]);

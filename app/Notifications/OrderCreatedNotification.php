@@ -29,20 +29,20 @@ class OrderCreatedNotification extends Notification
      */
     public function via(object $notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database' , ];
 
     
-        // $channels = ['database'];
-        // if ($notifiable->notification_prefrences['order_created']['sms'] ?? false){
-        //     $channels[] = 'vonage';
-        // }
-        // if ($notifiable->notification_prefrences['order_created']['mail'] ?? false){
-        //     $channels[] = 'mail';
-        // }
-        // if ($notifiable->notification_prefrences['order_created']['broadcast'] ?? false){
-        //     $channels[] = 'broadcast';
-        // }
-        // return $channels;
+        $channels = ['database'];
+        if ($notifiable->notification_prefrences['order_created']['sms'] ?? false){
+            $channels[] = 'vonage';
+        }
+        if ($notifiable->notification_prefrences['order_created']['mail'] ?? false){
+            $channels[] = 'mail';
+        }
+        if ($notifiable->notification_prefrences['order_created']['broadcast'] ?? false){
+            $channels[] = 'broadcast';
+        }
+        return $channels;
     }
     /**
      * Get the mail representation of the notification.
@@ -54,10 +54,22 @@ class OrderCreatedNotification extends Notification
             ->subject("New Order Created #{$this->order->number}")
             ->greeting("Hello {$notifiable->name},")
             ->line("New order #{$this->order->number} has been created by {$addr->name} from {$addr->country_name}.")
-            ->action('View Order', route('dashboard.orders.show', $this->order))
+            ->action('View Order', url('/dashboard'))
             ->line('Thank you for using our application!');
     }
 
+    public function toDatabase($notifiable)
+    {
+        $addr = $this->order->billingAddress;
+        return [
+            'body' => "New order(#{$this->order->number}) has been created by {$addr->name} from {$addr->country_name}.",
+            'icon' => 'fas fa-file',
+            'url' =>  url('/dashboard'),
+            'order_id' => $this->order->id,
+
+        ];
+           
+    }
     /**
      * Get the array representation of the notification.
      *

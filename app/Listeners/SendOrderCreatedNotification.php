@@ -6,9 +6,6 @@ use App\Events\OrderCreated;
 use App\Models\User;
 use App\Notifications\OrderCreatedNotification;
 use Exception;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 
@@ -74,18 +71,14 @@ class SendOrderCreatedNotification
     {
         $order = $event->order;
         $users = User::where('store_id', $order->store_id)->get();
-    
+
         // Test before sending the notification
         // dd('OrderCreated event listener called.aaaaaaaaaaaaaaaaaaaaaa', $users);
-    
-
-            Notification::send($users, new OrderCreatedNotification($order));
-    
-            // Test after sending the notification
-            dd('OrderCreatedNotification bbbbbbbbbbbbbbb', $users);
-
+        Notification::send($users, new OrderCreatedNotification($order));
+        // Test after sending the notification
+        // dd('OrderCreatedNotification bbbbbbbbbbbbbbb', $users);
+   
     }
-    
 
 
 }
