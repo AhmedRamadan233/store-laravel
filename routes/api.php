@@ -63,6 +63,11 @@ Route::prefix('auth/dashboard')->middleware('auth:sanctum')->group(function () {
 Route::prefix('dashboard')->middleware(['auth:sanctum', 'auth.type:admin,super-admin'])->group(function () {
     // Dashboard index route
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notification', [DashboardController::class, 'notification']);
+    Route::get('/notification/{notification}', [DashboardController::class, 'markNotificationAsRead']);
+    Route::get('/mark-notification-read/{notificationId}', [DashboardController::class, 'markNotificationAsRead']);
+
+
     // Categories routes
     Route::prefix('categories')->group(function () {
         // Get all Categories
