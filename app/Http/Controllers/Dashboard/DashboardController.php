@@ -57,12 +57,12 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function someAction()
-    {
-        // Replace 1 with the actual ID of the notification you want to mark as read.
-        $updatedNotifications = $this->markNotificationAsRead(1);
-        // Use $updatedNotifications as needed.
-    }
+    // public function someAction()
+    // {
+    //     // Replace 1 with the actual ID of the notification you want to mark as read.
+    //     $updatedNotifications = $this->markNotificationAsRead(1);
+    //     // Use $updatedNotifications as needed.
+    // }
 
     /**
      * Show the form for editing the specified resource.
